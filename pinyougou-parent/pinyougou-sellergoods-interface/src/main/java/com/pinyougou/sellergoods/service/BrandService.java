@@ -31,6 +31,16 @@ public interface BrandService {
 	 * @param brand
 	 */
 	public void update(TbBrand brand);
+	/**
+	 * 根据id删除
+	 * @param ids
+	 */
+	public void delete(Long[] ids);
+	
+	/**
+	 * 模糊查询
+	 */
+	public PageResult findPage(TbBrand brand, int pageNum,int pageSize);
 	
 	
 }

@@ -66,4 +66,25 @@ public class BrandController {
 		
 	}
 	
+	//根据id删除信息
+		@RequestMapping("/delete")
+		public Result delete(Long[] ids) {
+			 try {
+				brandService.delete(ids);
+				return new Result(true, "删除成功");
+			} catch (Exception e) {
+				
+				e.printStackTrace();
+				return new Result(false, "删除失败");
+			}
+			
+		}
+		
+		//模糊查询
+		@RequestMapping("/search")
+		public PageResult search(@RequestBody TbBrand brand, int page, int rows ){
+			
+			return brandService.findPage(brand, page, rows); 
+		}
+		
 }
