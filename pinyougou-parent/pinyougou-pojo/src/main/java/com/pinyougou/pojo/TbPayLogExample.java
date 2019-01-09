@@ -1,10 +1,11 @@
 package com.pinyougou.pojo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TbPayLogExample {
+public class TbPayLogExample implements Serializable{
     protected String orderByClause;
 
     protected boolean distinct;

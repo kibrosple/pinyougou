@@ -1,5 +1,7 @@
 package com.pinyougou.sellergoods.service;
 import java.util.List;
+import java.util.Map;
+
 import com.pinyougou.pojo.TbSpecification;
 import com.pinyougou.pojogroup.Specification;
 
@@ -34,7 +36,7 @@ public interface SpecificationService {
 	/**
 	 * 修改
 	 */
-	public void update(TbSpecification specification);
+	public void update(Specification specification);
 	
 
 	/**
@@ -64,5 +66,10 @@ public interface SpecificationService {
 	 * @param specification
 	 */
 	public void add(Specification specification);
+	
+	/**
+	* 规格下拉框数据
+	*/
+	public List<Map> selectOptionList();
 	
 }

@@ -1,5 +1,6 @@
 package com.pinyougou.sellergoods.service.impl;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.CRC32;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +62,23 @@ public class SpecificationServiceImpl implements SpecificationService {
 	 * 修改
 	 */
 	@Override
-	public void update(TbSpecification specification){
-		specificationMapper.updateByPrimaryKey(specification);
+	public void update(Specification specification){
+		//保存修改的规格
+		TbSpecification tbSpecification = specification.getSpecification();
+		specificationMapper.updateByPrimaryKey(tbSpecification);
+		
+		TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+		 com.pinyougou.pojo.TbSpecificationOptionExample.Criteria createCriteria = example.createCriteria();
+		 createCriteria.andSpecIdEqualTo(tbSpecification.getId());
+		 //删除存在的规格
+		 specificationOptionMapper.deleteByExample(example);
+		//循环插入规格选项
+		for(TbSpecificationOption option : specification.getSpecificationOptionList()) {
+			//设置插入的规格id
+			option.setSpecId(specification.getSpecification().getId());
+			specificationOptionMapper.insert(option);
+			}
+		
 	}	
 	
 	/**
@@ -94,11 +110,16 @@ public class SpecificationServiceImpl implements SpecificationService {
 	public void delete(Long[] ids) {
 		for(Long id:ids){
 			specificationMapper.deleteByPrimaryKey(id);
+			//删除原有的规格选项 
+			TbSpecificationOptionExample example=new TbSpecificationOptionExample();
+			com.pinyougou.pojo.TbSpecificationOptionExample.Criteria criteria = example.createCriteria();
+			criteria.andSpecIdEqualTo(id);//指定规格 ID 为条件
+			specificationOptionMapper.deleteByExample(example);//删除
 		}		
 	}
 	
 	
-		@Override
+	@Override
 	public PageResult findPage(TbSpecification specification, int pageNum, int pageSize) {
 		PageHelper.startPage(pageNum, pageSize);
 		
@@ -127,5 +148,10 @@ public class SpecificationServiceImpl implements SpecificationService {
 				specificationOptionMapper.insert(option);
 			}
 		}
-	
+
+		@Override
+		public List<Map> selectOptionList() {
+			// TODO Auto-generated method stub
+			return specificationMapper.selectOptionList();
+		}
 }
