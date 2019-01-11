@@ -1,5 +1,5 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller   ,goodsService,uploadService){	
+app.controller('goodsController' ,function($scope,$controller,goodsService,uploadService,itemCatService){	
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -99,7 +99,8 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,up
 		uploadService.uploadFile().success(
 			function(response){
 				if(response.success){
-					$scope.image_entity.url= response.message;
+					//如果上传成功，取出 url
+					$scope.image_entity.url= response.message; //设置文件地址
 				}else{
 					alert(response.message);					
 				}
@@ -120,5 +121,44 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService,up
 	$scope.remove_image_entity=function(index){
 		$scope.entity.goodsDesc.itemImages.splice(index,1);
 	}
+	
+	//读取一级分类
+	$scope.selectItemCat1List=function(){
+		itemCatService.findByParentId(0).success(
+				function(response){
+					$scope.itemCat1List=response;
+				}
+		);
+	}
+	
+	//读取二级分类
+	$scope.$watch('entity.goods.category1Id', function(newValue, oldValue) {
+	//根据选择的值，查询二级分类
+		itemCatService.findByParentId(newValue).success(
+				function(response){
+					$scope.itemCat2List=response;
+				}
+		);
+	});
+	
+	//读取三级分类
+	$scope.$watch('entity.goods.category2Id', function(newValue, oldValue) {
+	//根据选择的值，查询三级分类
+		itemCatService.findByParentId(newValue).success(
+				function(response){
+					$scope.itemCat3List=response;
+				}
+		);
+	});
+	
+	//三级分类选择后 读取模板 ID
+	$scope.$watch('entity.goods.category3Id', function(newValue, oldValue) {
+		itemCatService.findOne(newValue).success(
+				function(response){
+					$scope.entity.goods.typeTemplateId=response.typeId; //更新模板 ID
+				}
+		);
+	});
+	
     
 });	

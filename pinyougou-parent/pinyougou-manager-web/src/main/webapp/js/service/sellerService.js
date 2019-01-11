@@ -32,7 +32,7 @@ app.service('sellerService',function($http){
 	
 	//审核
 	this.updateStatus=function(sellerId,status){
-		return
-		$http.get('../seller/updateStatus.do?sellerId='+sellerId+'&status='+status);
+		
+		return $http.get('../seller/updateStatus.do?sellerId='+sellerId+'&status='+status);
 		}
 });

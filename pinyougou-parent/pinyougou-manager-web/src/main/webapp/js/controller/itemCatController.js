@@ -1,5 +1,5 @@
  //控制层 
-app.controller('itemCatController' ,function($scope,$controller   ,itemCatService){	
+app.controller('itemCatController' ,function($scope,$controller,itemCatService,brandService){	
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -37,13 +37,14 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 		if($scope.entity.id!=null){//如果有ID
 			serviceObject=itemCatService.update( $scope.entity ); //修改  
 		}else{
+			$scope.entity.parentId=$scope.parentId;//赋予上级 ID
 			serviceObject=itemCatService.add( $scope.entity  );//增加 
 		}				
 		serviceObject.success(
 			function(response){
 				if(response.success){
 					//重新查询 
-		        	$scope.reloadList();//重新加载
+					$scope.findByParentId($scope.parentId);//重新加载
 				}else{
 					alert(response.message);
 				}
@@ -76,5 +77,54 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 			}			
 		);
 	}
+	
+	$scope.findByParentId=function(parentId){
+		//绑定上级id,作为新建的id//记住上级 ID
+		$scope.parentId=parentId;
+		itemCatService.findByParentId(parentId).success(
+				function(response){
+					$scope.list=response;
+					
+				}	
+		);
+	}
+	
+	/*//读取品牌列表
+	$scope.brandList={data:[]};//品牌列表
+	$scope.findBrandList=function(){
+	    brandService.selectOptionList().success(
+	        function(response){
+	            $scope.brandList={data:response};
+	        }
+	    );      
+	}*/
+	
+	$scope.grade=1;//默认为 1 级 
+	//设置级别
+		$scope.setGrade=function(value){
+			$scope.grade=value;
+	} 
+	//读取列表
+	$scope.selectList=function(p_entity){
+		//将传过来的实体list集合号的查询条件id作为下级集合的id
+		//$scope.entity.parentId=p_entity.id;
+		if($scope.grade==1){	//如果为 1 级
+			$scope.entity_1=null;
+			$scope.entity_2=null;
+		} 
+		if($scope.grade==2){	//如果为 2 级
+			$scope.entity_1=p_entity;
+			$scope.entity_2=null;
+		} 
+		if($scope.grade==3){	//如果为 3 级
+			$scope.entity_2=p_entity;
+		} 
+		$scope.findByParentId(p_entity.id);  //查询此级下级列表
+		
+		
+	
+	}
+	
+	
     
 });	
