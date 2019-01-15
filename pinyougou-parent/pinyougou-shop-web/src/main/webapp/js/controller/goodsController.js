@@ -37,13 +37,21 @@ app.controller('goodsController' ,function($scope,$controller,$location,goodsSer
 				$scope.entity.goodsDesc.itemImages=JSON.parse($scope.entity.goodsDesc.itemImages);
 				// 显示扩展属性
 				$scope.entity.goodsDesc.customAttributeItems=JSON.parse($scope.entity.goodsDesc.customAttributeItems);
+				//规格
+				$scope.entity.goodsDesc.specificationItems=JSON.parse($scope.entity.goodsDesc.specificationItems);
+				//转换sku列表中的规格对象
+				for(var i=0;i< $scope.entity.itemList.length;i++ ){
+					$scope.entity.itemList[i].spec=  JSON.parse($scope.entity.itemList[i].spec);					
+				}
 			}
 		);				
 	}
 	
 	//保存 
 	$scope.save=function(){				
-		var serviceObject;//服务层对象  				
+		var serviceObject;//服务层对象  
+		//提取文本编辑器的值
+		$scope.entity.goodsDesc.introduction=editor.html(); 
 		if($scope.entity.id!=null){//如果有ID
 			serviceObject=goodsService.update( $scope.entity ); //修改  
 		}else{
@@ -52,8 +60,11 @@ app.controller('goodsController' ,function($scope,$controller,$location,goodsSer
 		serviceObject.success(
 			function(response){
 				if(response.success){
+					alert('保存成功'); 
+					$scope.entity={};
+					editor.html("");
 					//重新查询 
-		        	$scope.reloadList();//重新加载
+					location.href="goods.html";//跳转到商品列表页
 				}else{
 					alert(response.message);
 				}
@@ -186,8 +197,7 @@ app.controller('goodsController' ,function($scope,$controller,$location,goodsSer
 				if($location.search()['id']==null){
 				//扩展属性
 				$scope.entity.goodsDesc.customAttributeItems= JSON.parse($scope.typeTemplate.customAttributeItems);
-				//规格
-				$scope.entity.goodsDesc.specificationItems=JSON.parse($scope.entity.goodsDesc.specificationItems);
+				
 				}
 			}
 		);
@@ -199,6 +209,8 @@ app.controller('goodsController' ,function($scope,$controller,$location,goodsSer
 		);		
 		
 	});
+	
+	
 	
 	
 	$scope.updateSpecAttribute=function($event,name,value){
@@ -266,20 +278,26 @@ app.controller('goodsController' ,function($scope,$controller,$location,goodsSer
 		);
 	}
 	
-	//根据规格名称和选项名称返回是否被勾选
+	//判断规格与规格选项是否应该被勾选
 	$scope.checkAttributeValue=function(specName,optionName){
 		var items= $scope.entity.goodsDesc.specificationItems;
-		var object= $scope.searchObjectByKey(items,'attributeName',specName);
-		if(object==null){
-			return false;
-		}else{
-			if(object.attributeValue.indexOf(optionName)>=0){
+		var object =$scope.searchObjectByKey(items,'attributeName', specName);
+		
+		if(object!=null){
+			if(object.attributeValue.indexOf(optionName)>=0){//如果能够查询到规格选项
 				return true;
 			}else{
 				return false;
-			}
-		} 
+			}			
+		}else{
+			return false;
+		}		
 	}
+	
+	
+	
+	
+	
 	
 	
 });	

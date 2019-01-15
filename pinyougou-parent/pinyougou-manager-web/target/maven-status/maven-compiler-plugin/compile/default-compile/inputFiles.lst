@@ -1,10 +1,13 @@
-D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\GoodsController.java
 D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\SellerController.java
-D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\BrandController.java
-D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\GoodsDescController.java
+D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\UploadController.java
+D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\ContentCategoryController.java
+D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\ContentController.java
 D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\SpecificationOptionController.java
 D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\SpecificationController.java
 D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\ItemController.java
+D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\GoodsController.java
+D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\BrandController.java
+D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\GoodsDescController.java
 D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\ItemCatController.java
 D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\LoginController.java
 D:\eclipseWorkspace\pinyougou-parent\pinyougou-manager-web\src\main\java\com\pinyougou\manager\controller\TypeTemplateController.java
