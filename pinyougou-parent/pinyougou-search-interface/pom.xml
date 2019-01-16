@@ -5,17 +5,12 @@
     <artifactId>pinyougou-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>pinyougou-pojo</artifactId>
+  <artifactId>pinyougou-search-interface</artifactId>
   <dependencies>
-	 <dependency>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-compiler-plugin</artifactId>
-		<version>3.2</version>
-	 </dependency>
-	 <dependency>
-		<groupId>org.springframework.data</groupId>
-		<artifactId>spring-data-solr</artifactId>
-		<version>1.5.5.RELEASE</version>
-	 </dependency>
+  	<dependency>
+  		<groupId>com.itheima</groupId>
+  		<artifactId>pinyougou-pojo</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
   </dependencies>
 </project>
