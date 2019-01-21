@@ -132,11 +132,11 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 		//1.6 分页  前端传入当前页,和每页显示记录数
 		Integer pageNo= (Integer) searchMap.get("pageNo");//获取页码
 		if(pageNo==null){
-			pageNo=1;
+			pageNo=1; //默认为第一页
 		}
 		Integer pageSize= (Integer) searchMap.get("pageSize");//获取页大小
 		if(pageSize==null){
-			pageSize=20;
+			pageSize=20; //默认每页20条记录
 		}
 		
 		query.setOffset( (pageNo-1)*pageSize  );//起始索引

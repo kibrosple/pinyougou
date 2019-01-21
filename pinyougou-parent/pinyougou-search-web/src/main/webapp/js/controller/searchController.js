@@ -66,7 +66,7 @@ app.controller('searchController',function($scope,$location,searchService){
 		}
 		
 		
-		//构建页码
+		//构建页码,循环产业
 		for(var i=firstPage;i<=lastPage;i++){
 			$scope.pageLabel.push(i);
 		}
@@ -75,6 +75,7 @@ app.controller('searchController',function($scope,$location,searchService){
 	//分页查询
 	$scope.queryByPage=function(pageNo){
 		if(pageNo<1 || pageNo>$scope.resultMap.totalPages){
+			//如果输入的数据页面小于1,或者大于最大页面,直接return 不执行
 			return ;
 		}		
 		$scope.searchMap.pageNo=pageNo;
