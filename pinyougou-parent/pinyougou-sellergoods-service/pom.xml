@@ -85,7 +85,12 @@
 		<artifactId>servlet-api</artifactId>		
 		<scope>provided</scope>
 	</dependency>
-	
+
+	<dependency>
+		<groupId>com.itheima</groupId>
+		<artifactId>pinyougou-common</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
   </dependencies>
   <build>  
 	  <plugins>	     

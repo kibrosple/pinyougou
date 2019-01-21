@@ -8,11 +8,6 @@
   <groupId>pinyougou-solr-util</groupId>
   <artifactId>pinyougou-solr-util</artifactId>
   <dependencies>
-  	<dependency>
-  		<groupId>com.itheima</groupId>
-  		<artifactId>pinyougou-dao</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
   	  		<!-- Spring -->
 	<dependency>
 		<groupId>org.springframework</groupId>
@@ -50,5 +45,10 @@
 		<groupId>com.alibaba</groupId>
 		<artifactId>fastjson</artifactId>
 	</dependency>
+  	<dependency>
+  		<groupId>com.itheima</groupId>
+  		<artifactId>pinyougou-dao</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
   </dependencies>
 </project>

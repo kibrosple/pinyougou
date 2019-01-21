@@ -3,6 +3,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
@@ -31,6 +33,9 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 	
 	@Autowired
 	private TbSpecificationOptionMapper specificationOptionMapper;
+	
+	@Autowired
+	private RedisTemplate redisTemplate;
 	
 	/**
 	 * 查询全部
@@ -111,9 +116,13 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 	
 		}
 		
-		Page<TbTypeTemplate> page= (Page<TbTypeTemplate>)typeTemplateMapper.selectByExample(example);		
+		Page<TbTypeTemplate> page= (Page<TbTypeTemplate>)typeTemplateMapper.selectByExample(example);
+		//存入数据到缓存
+		saveToRedis();
 		return new PageResult(page.getTotal(), page.getResult());
 	}
+		
+		
 		//从模板中获取 规格选项列表
 		@Override
 		public List<Map> findSpecList(Long id) {
@@ -129,6 +138,23 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 				map.put("options", options);
 			}
 			return list;
+		}
+		
+		//将品牌存入缓存,根据模板id
+		private void saveToRedis() {
+			//获取所有的模板数据
+			List<TbTypeTemplate> typeTemplateList = findAll();
+			//对模板进行循环
+			for(TbTypeTemplate typeTemplate :typeTemplateList) {
+				//存储品牌列表 ,转换为数组形式
+				List<Map> brandList = JSON.parseArray(typeTemplate.getBrandIds(),Map.class);
+				//通过模板id,存入对应的品牌列表集合
+				redisTemplate.boundHashOps("brandList").put(typeTemplate.getId(),brandList);
+				//存储规格列表,得到规格直接调用模板列表的方法
+				List<Map> specList = findSpecList(typeTemplate.getId());//根据模板 ID 查询规格列表
+				//通过模板id存入规格选项集合
+				redisTemplate.boundHashOps("specList").put(typeTemplate.getId(),specList); 
+			}
 		}
 	
 }
