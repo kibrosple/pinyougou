@@ -1,7 +1,10 @@
 package com.pinyougou.page.service.impl;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +88,8 @@ public class ItemPageServiceImpl implements ItemPageService {
 			List<TbItem> itemList = itemMapper.selectByExample(example);
 			dataModel.put("itemList", itemList);
 			
-			Writer out=new FileWriter(pagedir+goodsId+".html");
+			//Writer out=new FileWriter(pagedir+goodsId+".html","utf-8");
+			Writer out =new BufferedWriter(new OutputStreamWriter(new FileOutputStream(pagedir+goodsId+".html"),"UTF-8"));
 			
 			template.process(dataModel, out);//输出
 			out.close();

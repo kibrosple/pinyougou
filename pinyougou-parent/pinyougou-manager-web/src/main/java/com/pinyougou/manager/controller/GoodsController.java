@@ -2,11 +2,20 @@ package com.pinyougou.manager.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.pinyougou.page.service.ItemPageService;
 import com.pinyougou.pojo.TbGoods;
 import com.pinyougou.pojo.TbItem;
@@ -29,6 +38,10 @@ public class GoodsController {
 	private GoodsService goodsService;
 	@Reference
 	private ItemSearchService itemSearchService;
+	@Autowired
+	private Destination queueSolrDestination;//用于发送 solr 导入的消息
+	@Autowired
+	private JmsTemplate jmsTemplate;
 	
 	/**
 	 * 返回全部列表
@@ -99,16 +112,28 @@ public class GoodsController {
 		return goodsService.findOne(id);		
 	}
 	
+	@Autowired
+	private Destination queueSolrDeleteDestination;//用户在索引库中删除记录
+					
 	/**
 	 * 批量删除
 	 * @param ids
 	 * @return
 	 */
 	@RequestMapping("/delete")
-	public Result delete(Long [] ids){
+	public Result delete( final Long [] ids){  //final
 		try {
 			goodsService.delete(ids);
-			itemSearchService.deleteByGoodsIds(Arrays.asList(ids));
+			//从索引库中删除
+			/*itemSearchService.deleteByGoodsIds(Arrays.asList(ids));
+			System.out.println("删除成功");*/
+			jmsTemplate.send(queueSolrDeleteDestination, new MessageCreator() {
+				@Override
+				public Message createMessage(Session session) throws JMSException {
+					return session.createObjectMessage(ids);
+				}
+			});
+			
 			return new Result(true, "删除成功"); 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -140,12 +165,30 @@ public class GoodsController {
 			//按照 SPU ID 查询 SKU 列表(状态为 1)
 			if(status.equals("1")){//审核通过
 			List<TbItem> itemList =goodsService.findItemListByGoodsIdandStatus(ids, status);
+			
 			//调用搜索接口实现数据批量导入
 			if(itemList.size()>0){ 
-				itemSearchService.importList(itemList);
+				//itemSearchService.importList(itemList);
+				//首先把集合转换为json字符串
+				final String jsonString = JSON.toJSONString(itemList);
+				jmsTemplate.send(queueSolrDestination, new MessageCreator() {
+
+					@Override
+					public Message createMessage(Session session) throws JMSException {
+						
+						 return session.createTextMessage(jsonString);
+					}
+					
+				});
+				
 				}else{
 					System.out.println("没有明细数据");
 				}
+			//静态页生成
+				for(Long goodsId:ids){
+					itemPageService.genItemHtml(goodsId);
+				} 
+			
 			}
 			return new Result(true, "修改状态成功");
 		} catch (Exception e) {
